@@ -1,0 +1,181 @@
+/* General styles */
+body {
+  font-family: "Roboto", sans-serif; /* More professional font */
+  margin: 0; /* Remove default body margin */
+  background-color: #fff; /* Light gray background */
+  color: #333;
+
+  flex-direction: column; /* Stack content vertically */
+}
+
+.logo {
+  position: absolute;
+  top: 10px; /* Adjust as needed */
+  left: 10px; /* Adjust as needed */
+  width: 80px !important; /* Adjust as needed */
+  height: auto; /* Maintain aspect ratio */
+}
+.appointment {
+  margin-bottom: 15px;
+}
+.appointment input[type="checkbox"] {
+  width: 25px; /* Adjust as needed */
+  height: 25px; /* Adjust as needed */
+}
+
+.appointment-info {
+  padding-right: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.small {
+  font-size: 1.2rem;
+}
+
+#lable_appointment {
+  top: 15px;
+  font-size: 25px;
+  padding-left: 10px;
+}
+
+h1 {
+  text-align: center;
+  color: #28a745; /* Example green header color */
+  margin: 2rem 0; /* More controlled spacing */
+}
+
+.container {
+  width: 100%;
+  max-width: 600px; /* Adjust the max width as needed */
+  margin: 0 auto; /* Center the container */
+}
+
+/* Styles for the index.html (Tablet Input Form) */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background-color: #fff;
+
+  position: relative; /* For absolute positioning of the fullscreen button */
+}
+
+#nameForm {
+  display: flex;
+  flex-direction: column;
+  width: 30%; /* Make form take full width */
+}
+
+input[type="text"] {
+  padding: 12px 16px;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+input[type="text"]:focus {
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+button[type="submit"] {
+  padding: 12px 20px;
+  font-size: 1rem;
+  background-color: #28a745; /* Example green color */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
+}
+
+button[type="submit"]:hover {
+  background-color: #218838; /* Darker green on hover */
+}
+
+/* Styles for the office.html (Back Office View) */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 50%; /* Limit width for better readability */
+}
+
+li {
+  font-family: "Roboto", sans-serif;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #575757;
+  margin-bottom: 10px;
+  padding: 12px 15px;
+  background-color: #f0f2f5; /* White background for each list item */
+  border: 1px solid #dee2e6; /* Light border */
+  border-radius: 5px; /* Rounded corners */
+  display: flex;
+  justify-content: space-between; /* Push delete button to the right */
+  align-items: center; /* Vertically center content */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24); /* Subtle shadow */
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smooth transition */
+}
+
+li:hover {
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22); /* More pronounced effect on hover */
+}
+
+.deleteButton {
+  padding: 8px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  background-color: #dc3545; /* Red color */
+  color: white;
+}
+
+.deleteButton:hover {
+  background-color: #c82333; /* Darker red on hover */
+}
+
+/* Fullscreen Button Styling */
+#fullscreenBtn {
+  position: absolute;
+  bottom: 0px;
+  right: 10px;
+  background-color: transparent; /* Make background transparent */
+  border: none; /* Remove the border */
+  font-size: 24px; /* Adjust as needed */
+  cursor: pointer;
+  color: #6c757d; /* Gray color for a subtle look */
+  padding: 5px; /* Add some padding around */
+  border-radius: 5px;
+  transition: color 0.3s ease;
+  z-index: 1000;
+}
+
+#fullscreenBtn:hover {
+  color: #495057; /* Darker gray on hover */
+}
+
+#fullscreenBtn span {
+  display: block;
+}
+
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #f0f2f5; /* Light gray background */
+  color: black; /* Text color */
+  text-align: center;
+  padding: 10px;
+  font-size: 0.8em; /* Smaller font size */
+}

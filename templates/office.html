@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Back Office</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}" />
+    <style>
+      .appointment-info {
+        font-size: 0.8em; /* Smaller font size for the entire span */
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Patienten-Liste</h1>
+    <ul id="customerList">
+      {% for customer in customers %}
+      <li data-name="{{ customer.name }}">
+        {{ customer.name }}
+        <div>
+          Termin: {% if customer.appointment %} JA {% else %} Nein {% endif %}
+        </div>
+        <button class="deleteButton" data-name="{{ customer.name }}">
+          Delete
+        </button>
+      </li>
+      {% endfor %}
+    </ul>
+
+    <audio
+      id="notificationSound"
+      src="{{ url_for('static', path='notification.wav') }}"
+      preload="auto"
+    ></audio>
+
+    <script src="{{ url_for('static', path='script.js') }}"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        let customerListElement = document.getElementById("customerList"); // Changed to let
+        const notificationSound = document.getElementById("notificationSound");
+        let existingCustomerNames = new Set(
+          Array.from(customerListElement.querySelectorAll("li")).map(
+            (li) => li.dataset.name
+          )
+        ); // Initialize the set with the names already present when loaded
+
+        async function fetchCustomers() {
+          try {
+            const response = await fetch("/customers");
+            if (!response.ok) {
+              if (response.status === 429) {
+                console.warn("Too many requests. Retrying in 3 seconds.");
+                setTimeout(fetchCustomers, 3000); // Retry after 3 seconds
+                return;
+              } else {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              }
+            }
+            const customers = await response.json();
+            updateCustomerList(customers);
+          } catch (error) {
+            console.error("Failed to fetch customers:", error);
+          }
+        }
+
+        function updateCustomerList(customers) {
+          const newCustomerNames = new Set(customers.map((c) => c.name));
+          let newList = document.createElement("ul");
+          newList.id = "customerList";
+
+          let newCustomersPresent = false;
+          customers.forEach((customer) => {
+            const listItem = document.createElement("li");
+            listItem.dataset.name = `<div>${customer.name}</div>`;
+            let appointmentText = `<div class="small"> ${
+              customer.appointment ? "mit Termin" : ""
+            }</div>`;
+
+            listItem.innerHTML = `<div class="appointment-info">${customer.name} ${appointmentText}</div>`; // Put the name before the span
+
+            const deleteButton = document.createElement("button");
+            deleteButton.className = "deleteButton";
+            deleteButton.dataset.name = customer.name;
+            deleteButton.textContent = "Delete";
+
+            deleteButton.addEventListener("click", function (event) {
+              deleteCustomer(event.target.dataset.name);
+            });
+
+            listItem.appendChild(deleteButton);
+            newList.appendChild(listItem);
+
+            if (!existingCustomerNames.has(customer.name)) {
+              newCustomersPresent = true;
+            }
+          });
+
+          customerListElement.replaceWith(newList);
+          customerListElement = document.getElementById("customerList");
+
+          existingCustomerNames = newCustomerNames; // update the list of existing Customers
+
+          if (newCustomersPresent) {
+            notificationSound.play();
+          }
+        }
+
+        async function deleteCustomer(name) {
+          try {
+            const response = await fetch(`/customer/${name}`, {
+              method: "DELETE",
+            });
+            if (response.ok) {
+              console.log(`Customer ${name} deleted successfully.`);
+              fetchCustomers(); // Refresh customer list
+            } else {
+              console.error(
+                `Failed to delete customer ${name}:`,
+                response.status
+              );
+            }
+          } catch (error) {
+            console.error("Error deleting customer:", error);
+          }
+        }
+
+        // Fetch customers every 3 seconds
+        setInterval(fetchCustomers, 3000);
+
+        // Initial fetch
+        fetchCustomers();
+      });
+    </script>
+  </body>
+</html>
