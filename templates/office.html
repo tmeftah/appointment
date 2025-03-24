@@ -31,7 +31,6 @@
       preload="auto"
     ></audio>
 
-    <script src="{{ url_for('static', path='script.js') }}"></script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         let customerListElement = document.getElementById("customerList"); // Changed to let
@@ -69,6 +68,7 @@
           let newCustomersPresent = false;
           customers.forEach((customer) => {
             const listItem = document.createElement("li");
+            console.log(customer.name);
             listItem.dataset.name = `<div>${customer.name}</div>`;
             let appointmentText = `<div class="small"> ${
               customer.appointment ? "mit Termin" : ""

@@ -1,12 +1,24 @@
 from fastapi import FastAPI, Request, Form, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Dict
 import uvicorn
-import time
+
 
 app = FastAPI()
+
+
+# Configure CORS to allow cross-origin requests
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
@@ -25,10 +37,16 @@ async def submit_name(
     name: str = Form(...), appointment: bool = Form(False)
 ):  # Add appointment boolean
     global customer_list
-    customer = {"name": name, "appointment": appointment}  # Create customer dict
+    name = "-" if name.strip() == "" else name.strip()
+    customer = {
+        "name": name,
+        "appointment": appointment,
+    }  # Create customer dict
     customer_list.append(customer)
 
-    return {"status": "success", "customer": customer}  # return the customer dict
+    return JSONResponse(
+        content={"message": f"Vielen Dank Herr/Frau. {name}!"}
+    )  # Return the message as JSON
 
 
 @app.get("/office", response_class=HTMLResponse)
@@ -41,6 +59,8 @@ async def office_view(request: Request):
 @app.delete("/customer/{name}")
 async def delete_customer(name: str):
     global customer_list
+    print(customer_list)
+    print(name)
     # Find the customer dictionary by name
     for customer in customer_list:
         if customer["name"] == name:
