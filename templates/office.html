@@ -105,8 +105,13 @@
 
         async function deleteCustomer(name) {
           try {
-            const response = await fetch(`/customer/${name}`, {
-              method: "DELETE",
+            const response = await fetch(`/customer`, {
+              // Corrected endpoint
+              method: "DELETE", // Changed to POST
+              headers: {
+                "Content-Type": "application/json", // Add content type header
+              },
+              body: JSON.stringify({ name: name }), // Send name in request body as JSON
             });
             if (response.ok) {
               console.log(`Customer ${name} deleted successfully.`);

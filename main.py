@@ -5,9 +5,13 @@ from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Dict
 import uvicorn
-
+from pydantic import BaseModel
 
 app = FastAPI()
+
+
+class CustomerName(BaseModel):
+    name: str
 
 
 # Configure CORS to allow cross-origin requests
@@ -45,7 +49,7 @@ async def submit_name(
     customer_list.append(customer)
 
     return JSONResponse(
-        content={"message": f"Vielen Dank Herr/Frau. {name}!"}
+        content={"message": f"Vielen Dank."}
     )  # Return the message as JSON
 
 
@@ -56,11 +60,13 @@ async def office_view(request: Request):
     )
 
 
-@app.delete("/customer/{name}")
-async def delete_customer(name: str):
+@app.delete("/customer")
+async def delete_customer(customer_name: CustomerName):
     global customer_list
+    name = customer_name.name
     print(customer_list)
     print(name)
+
     # Find the customer dictionary by name
     for customer in customer_list:
         if customer["name"] == name:
@@ -72,6 +78,7 @@ async def delete_customer(name: str):
 @app.get("/customers")
 async def get_customers():
     global customer_list
+    # print(customer_list)
 
     return customer_list  # Returns the full  customers list as  JSON
 
